@@ -4,7 +4,7 @@ title: Building a personal website with Svelte and Tailwind
 description: A journey of first time trying to build something with Svelte for the first time
 keywords: Engineering, Tailwind, MDX, Svelte, Vercel, personal website
 publishedTime: 2022-01-13T14:05:15.044Z
-modifiedTime: 2022-01-13T14:05:15.044Z
+modifiedTime: 2022-01-16T04:10:53.243Z
 ---
 
 New year new website!
@@ -173,3 +173,42 @@ I like the overall experience so far. Will definitely keep an eye out for Svelte
 website as a testing ground. But I will still continue using React for a bigger projects. The
 ecosystem in React is not a few level above currently. It might still take years for Svelte to catch
 up.
+
+---
+
+## Update
+
+I had more fun than I thought working with Svelte so I decided to spend a bit more time for some
+improvement here and there in the weekend.
+
+The main improvement is images optimisation. Prior to this, there were two custom routes to resize
+images and make placeholder images using [sharp](https://github.com/lovell/sharp).
+
+Resizing images is straightforward as it just resizes images for thumbnails which could be extended
+for doing some `srcset` which is not implemented in this website yet.
+
+Placeholder images are not as simple. At first, it was another custom route but the performance does
+not improvement much since it would still require requests to server to get those images. So I tried
+to embed [data URLs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs)
+instead so that the visitors and see the placeholders immediately.
+
+I tried to put the implementation in `Image.svelte` component itself but it did not really work
+since preload data asynchronously does not really work with prerendering. So I ended up just
+generate data URL for placeholders in JSON file instead. This way the component knows about the
+placeholder before it renders.
+
+There is another quirk I found. is it seems routes in `.svx` do not get prerender. This means both
+prerendered resized images and placeholder images do not work with the contents in [/posts](/posts)
+and [/projects](/projects).
+
+This ended up forcing me to manually resize the image and write a
+[remark](https://github.com/remarkjs/remark) plugin to generate placeholder's data URL. The
+implementation was not pretty since I have to append the generate URL to `title` field of the image
+since I do not know how to set custom attributes. I am still very new with `remark`, so maybe if I
+found a better solution I will make an update on that.
+
+Another improvement that I made was page transitioning which was a lot simpler to do compared to
+React. No additional package is required and the API is simple, I guess that is the benefit of being
+an actual framework and not just a UI library. However, the transition somehow does not work all the
+time in mobile devices. I am not sure why yet but since there is only few visitors coming from
+mobile anyway so I decided to leave it as it is for now.
