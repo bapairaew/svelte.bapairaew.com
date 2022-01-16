@@ -4,7 +4,7 @@ title: Building a personal website with Svelte and Tailwind
 description: A journey of first time trying to build something with Svelte for the first time
 keywords: Engineering, Tailwind, MDX, Svelte, Vercel, personal website
 publishedTime: 2022-01-13T14:05:15.044Z
-modifiedTime: 2022-01-16T04:10:53.243Z
+modifiedTime: 2022-01-16T05:59:33.343Z
 ---
 
 New year new website!
@@ -212,3 +212,7 @@ React. No additional package is required and the API is simple, I guess that is 
 an actual framework and not just a UI library. However, the transition somehow does not work all the
 time in mobile devices. I am not sure why yet but since there is only few visitors coming from
 mobile anyway so I decided to leave it as it is for now.
+
+---
+
+Source code: https://github.com/bapairaew/svelte.bapairaew.com
