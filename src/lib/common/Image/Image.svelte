@@ -27,7 +27,7 @@
 	<IntersectionObserver let:intersecting once>
 		{#if intersecting}
 			<img
-				class="min-h-full object-cover w-full"
+				class="min-h-full object-cover w-full h-full"
 				class:unblur={justLoaded}
 				loading="lazy"
 				use:lazy={{ src }}
