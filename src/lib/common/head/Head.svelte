@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { VITE_CANON_ROOT: root } = import.meta.env;
+	const { VITE_CANON_ROOT: root, VITE_PLAUSIBLE_DOMAIN: plausibleDomain } = import.meta.env;
 
 	export let title: string;
 	export let description: string;
@@ -15,4 +15,9 @@
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:site" content="@bapairaew" />
 	<meta name="twitter:creator" content="@bapairaew" />
+
+	<script
+		src="/stats/js/script.js"
+		data-api="/stats/api/event"
+		data-domain={plausibleDomain}></script>
 </svelte:head>
