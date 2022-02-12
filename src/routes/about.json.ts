@@ -3,7 +3,7 @@ import type { Post, Project, Tool } from '$lib/markdown/markdownType';
 import { getAllPhotos, Photo } from '$lib/photography/photoData';
 import type { RequestHandler } from '@sveltejs/kit';
 
-export interface IndexData {
+export interface AboutData {
 	posts: Post[];
 	projects: Project[];
 	tools: Tool[];
@@ -39,6 +39,6 @@ export const get: RequestHandler = async () => {
 			projects: projects.sort((a, b) => b.slug.localeCompare(a.slug)).slice(0, 8),
 			tools,
 			photos: photos.sort((a, b) => b.slug.localeCompare(a.slug)).slice(0, 8)
-		} as IndexData)
+		} as AboutData)
 	};
 };

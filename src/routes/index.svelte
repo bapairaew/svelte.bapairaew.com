@@ -7,18 +7,18 @@
 	import PhotoCard from '$lib/photography/PhotoCard.svelte';
 	import type { Photo } from '$lib/photography/photoData';
 	import type { Load } from '@sveltejs/kit';
-	import type { IndexData } from './index.json';
+	import type { AboutData } from './about.json';
 
 	export const load: Load = async ({ fetch }) => {
-		const res = await fetch('/index.json');
+		const res = await fetch('/about.json');
 		if (res.ok) {
-			const data: IndexData = await res.json();
+			const data: AboutData = await res.json();
 			return {
 				props: data
 			};
 		}
 		return {
-			error: 'Could not load /index.json'
+			error: 'Could not load /about.json'
 		};
 	};
 
