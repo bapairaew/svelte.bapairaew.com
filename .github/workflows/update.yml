@@ -1,0 +1,14 @@
+name: Scheduled website update
+on:
+  schedule:
+    - cron: '0 */2 * * *' # Every two hours
+  workflow_dispatch: # Allows manual update
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fire deploy hook
+        uses: fjogeleit/http-request-action@master
+        with:
+          url: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+          method: 'POST'
