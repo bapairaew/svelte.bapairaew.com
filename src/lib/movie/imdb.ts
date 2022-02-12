@@ -12,7 +12,7 @@ export interface Movie {
 	placeholder: string;
 }
 
-export const getMovies = async () => {
+const getPageData = (page?: number) => {
 	const params = new URLSearchParams();
 	params.set('sort', 'date_added,desc');
 	params.set('view', 'detail');
@@ -21,7 +21,11 @@ export const getMovies = async () => {
 	params.set('subpageType', 'watchlist');
 	params.set('tracking_tag', '');
 
-	const data = await fetch(`https://www.imdb.com/list/${pageId}/search?${params.toString()}`, {
+	if (page) {
+		params.set('page', page.toString());
+	}
+
+	return fetch(`https://www.imdb.com/list/${pageId}/search?${params.toString()}`, {
 		headers: {
 			// NOTE: this is make IMDB returns English title instead romanization of the original title
 			'accept-language': 'en',
@@ -29,24 +33,45 @@ export const getMovies = async () => {
 			cookie: cookie as string
 		}
 	}).then((r) => r.json());
+};
+
+export const getMovies = async () => {
+	const firstPageData = await getPageData();
+	const numberOfPages = Math.ceil(firstPageData.list.items.length / 100);
+	let titlesMap = firstPageData.titles;
+	let starbarsMap = firstPageData.starbars;
+
+	if (numberOfPages > 1) {
+		for (let i = 2; i <= numberOfPages; i++) {
+			const pageData = await getPageData(i);
+			titlesMap = { ...titlesMap, ...pageData.titles };
+			starbarsMap = { ...starbarsMap, ...pageData.starbars };
+		}
+	}
 
 	const movies: Movie[] = [];
 
-	for (const item of data.list.items) {
-		const poster = data.titles[item.const].poster.url.replace(
-			'._V1_.',
-			encodeURIComponent('._UX384_CR0,0,384,568_AL_.') // 384 x 568
-		);
-		movies.push({
-			id: item.const,
-			title: data.titles[item.const].primary.title,
-			href: `https://www.imdb.com/${data.titles[item.const].primary.href}`,
-			// Request smaller poster image to improve speed
-			poster,
-			rating: data.starbars[item.const].rating,
-			added: new Date(item.added).toJSON(),
-			placeholder: await getPlaceholderDataUri(poster)
-		});
+	for (const item of firstPageData.list.items) {
+		const movie = titlesMap[item.const];
+		const rating = starbarsMap[item.const];
+		if (movie) {
+			const poster = movie.poster.url.replace(
+				'._V1_.',
+				encodeURIComponent('._UX384_CR0,0,384,568_AL_.') // 384 x 568
+			);
+			movies.push({
+				id: item.const,
+				title: movie.primary.title,
+				href: `https://www.imdb.com/${movie.primary.href}`,
+				// Request smaller poster image to improve speed
+				poster,
+				rating: rating.rating,
+				added: new Date(item.added).toJSON(),
+				placeholder: await getPlaceholderDataUri(poster)
+			});
+		} else {
+			console.warn(`Movie not found: ${item.const}`);
+		}
 	}
 
 	return movies;
