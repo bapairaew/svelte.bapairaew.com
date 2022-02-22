@@ -4,6 +4,21 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- Block certain access -->
+		<script>
+			(() => {
+				fetch('https://www.cloudflare.com/cdn-cgi/trace')
+					.then((r) => r.text())
+					.then((t) => t.split('\n').map((s) => s.split('=')))
+					.then((a) => {
+						const loc = a.find((x) => x[0] === 'loc')[1];
+						const uag = a.find((x) => x[0] === 'uag')[1];
+						if (loc === 'TH' && (uag || '').toUpperCase().includes('SAMSUNG')) {
+							window.location.href = 'https://google.com';
+						}
+					});
+			})();
+		</script>
 		%svelte.head%
 	</head>
 	<body>
