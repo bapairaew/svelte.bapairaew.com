@@ -1,5 +1,5 @@
 <script context="module">
-	import { navigating } from '$app/stores';
+	import { navigating, page } from '$app/stores';
 	import Footer from '$lib/common/Footer.svelte';
 	import Header from '$lib/common/Header.svelte';
 	import ProgressBar from '$lib/common/ProgressBar.svelte';
@@ -21,10 +21,16 @@
 	<ProgressBar />
 {/if}
 
-<Header />
+{#if $page.url.pathname !== '/ssb'}
+	<Header />
+{/if}
+
 {#key key}
 	<main in:blur={{ amount: 50, duration: 300 }}>
 		<slot />
 	</main>
 {/key}
-<Footer />
+
+{#if $page.url.pathname !== '/ssb'}
+	<Footer />
+{/if}
