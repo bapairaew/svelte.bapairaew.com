@@ -14,12 +14,7 @@
 						.then((a) => {
 							const loc = a.find((x) => x[0] === 'loc')[1];
 							const uag = a.find((x) => x[0] === 'uag')[1];
-							if (
-								loc === 'TH' &&
-								(uag || '').match(
-									/SAMSUNG|Samsung|SGH-[I|N|T]|GT-[I|N]|SM-[A|N|P|T|Z|G]|SHV-E|SCH-[I|J|R|S]|SPH-L/i
-								)
-							) {
+							if (loc === 'TH') {
 								window.location.href = '/ssb';
 							}
 						});
